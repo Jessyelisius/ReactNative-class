@@ -1,5 +1,11 @@
 import { Link } from "expo-router";
-import { Image, Keyboard, Platform, ScrollView } from "react-native";
+import {
+  Image,
+  Keyboard,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import {
   Text,
   View,
@@ -31,7 +37,20 @@ export default function HomeScreen() {
               <Image source={logo} style={{ width: 48, height: 48 }} />
               <Text style={styles.headerText}>Contacts</Text>
             </View>
-            <Image source={logo} style={{ width: 60, height: 60 }} />
+            {/* <Image source={logo} style={{ width: 60, height: 60 }} /> */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "blue",
+                paddingHorizontal: 20,
+                borderRadius: 5,
+                paddingVertical: 10,
+              }}
+              activeOpacity={0.5}
+            >
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
+                Login
+              </Text>
+            </TouchableOpacity>
           </View>
           {/* children */}
           <View style={{ flex: 8 }}>
