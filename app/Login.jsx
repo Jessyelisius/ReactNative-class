@@ -1,21 +1,11 @@
-import React from "react";
 import { Link } from "expo-router";
 import { Text, View, StyleSheet, TextInput, Button } from "react-native";
 import AuthLayout from "./Layouts/AuthLayout";
 
-const Register = () => {
+export default function LoginScreen() {
   return (
-    <AuthLayout screen={"Register"}>
+    <AuthLayout screen={"Login"}>
       <View style={{ flex: 7, padding: 12 }}>
-        {/* username */}
-        <View style={{ marginBottom: 6 }}>
-          <Text style={{ fontWeight: "500", fontSize: 16 }}>Username</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Username"
-          />
-        </View>
-        {/* email */}
         <View style={{ marginBottom: 6 }}>
           <Text style={{ fontWeight: "500", fontSize: 16 }}>Email</Text>
           <TextInput
@@ -24,7 +14,6 @@ const Register = () => {
             keyboardType="email-address"
           />
         </View>
-        {/* password */}
         <View style={{ marginBottom: 6 }}>
           <Text style={{ fontWeight: "500", fontSize: 16 }}>Password</Text>
           <TextInput
@@ -33,28 +22,19 @@ const Register = () => {
             secureTextEntry={true}
           />
         </View>
-        {/* confirm password */}
-        <View style={{ marginBottom: 6 }}>
-          <Text style={{ fontWeight: "500", fontSize: 16 }}>Confirm Password</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Confirm Password"
-            secureTextEntry={true}
-          />
-        </View>
 
         <View style={styles.linkView}>
-          <Text>Already have an account?</Text>
-          <Link style={{ fontWeight: "500", color: "blue" }} href="/Login">
-            Login
+          <Text>Don't have an account?</Text>
+          <Link style={{ fontWeight: "500", color: "blue" }} href="/Register">
+            Register
           </Link>
         </View>
 
-        <Button title="Register" />
+        <Button title="Login" />
       </View>
     </AuthLayout>
   );
-};
+}
 
 const styles = StyleSheet.create({
   textInput: {
@@ -62,7 +42,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 5,
-    marginVertical: 6,
+    marginVertical: 12,
   },
   linkView: {
     flexDirection: "row",
@@ -70,5 +50,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default Register;
