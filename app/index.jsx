@@ -75,74 +75,66 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <Pressable
-          style={{ flex: 1, paddingHorizontal: 15 }}
-          onPress={() => Keyboard.dismiss()}
+    <SafeAreaView style={{ flex: 1, paddingHorizontal: 15 }}>
+      {/* <Pressable
+        style={{ flex: 1, paddingHorizontal: 15 }}
+        onPress={() => Keyboard.dismiss()}
+      > */}
+      {/* header */}
+      <View style={styles.header}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={logo} style={{ width: 48, height: 48 }} />
+          <Text style={styles.headerText}>Contacts</Text>
+        </View>
+        {/* <Image source={logo} style={{ width: 60, height: 60 }} /> */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: "blue",
+            paddingHorizontal: 20,
+            borderRadius: 5,
+            paddingVertical: 10,
+          }}
+          activeOpacity={0.5}
+          onPress={() => addContact(db)}
         >
-          {/* header */}
-          <View style={styles.header}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Image source={logo} style={{ width: 48, height: 48 }} />
-              <Text style={styles.headerText}>Contacts</Text>
-            </View>
-            {/* <Image source={logo} style={{ width: 60, height: 60 }} /> */}
-            <TouchableOpacity
-              style={{
-                backgroundColor: "blue",
-                paddingHorizontal: 20,
-                borderRadius: 5,
-                paddingVertical: 10,
-              }}
-              activeOpacity={0.5}
-              onPress={() => addContact(db)}
-            >
-              {/* <Link
+          {/* <Link
                 style={{ color: "white", fontSize: 14, fontWeight: "500" }}
                 href="/Login"
               >
                 Login
               </Link> */}
-              <Text style={{ color: "white" }}>Add</Text>
-            </TouchableOpacity>
+          <Text style={{ color: "white" }}>Add</Text>
+        </TouchableOpacity>
+      </View>
+      {/* children */}
+      <View style={{ flex: 8 }}>
+        <ScrollView>
+          <View style={{ marginTop: 5 }}>
+            {contacts.length > 0 ? (
+              contacts.map((contact) => (
+                <View style={styles.contact} key={contact.id}>
+                  <View>
+                    <Image source={contactLogo} style={styles.contactImage} />
+                  </View>
+                  <View>
+                    <Text>{contact.name}</Text>
+                    <Text>{contact.phone}</Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text style={{ textAlign: "center", marginTop: 25 }}>
+                No Contacts Available
+              </Text>
+            )}
           </View>
-          {/* children */}
-          <View style={{ flex: 8 }}>
-            <ScrollView>
-              <View style={{ marginTop: 5 }}>
-                {contacts.length > 0 ? (
-                  contacts.map((contact) => (
-                    <View style={styles.contact} key={contact.id}>
-                      <View>
-                        <Image
-                          source={contactLogo}
-                          style={styles.contactImage}
-                        />
-                      </View>
-                      <View>
-                        <Text>{contact.name}</Text>
-                        <Text>{contact.phone}</Text>
-                      </View>
-                    </View>
-                  ))
-                ) : (
-                  <Text style={{ textAlign: "center", marginTop: 25 }}>
-                    No Contacts Available
-                  </Text>
-                )}
-              </View>
-            </ScrollView>
-          </View>
-          {/* footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Developed by Swift Tech</Text>
-          </View>
-        </Pressable>
-      </KeyboardAvoidingView>
+        </ScrollView>
+      </View>
+      {/* footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Developed by Swift Tech</Text>
+      </View>
+      {/* </Pressable> */}
     </SafeAreaView>
   );
 }
