@@ -2,24 +2,17 @@ import { Link } from "expo-router";
 import {
   Alert,
   Image,
-  Keyboard,
-  Platform,
   ScrollView,
   StatusBar,
   TouchableOpacity,
-} from "react-native";
-import {
   Text,
   View,
   StyleSheet,
-  TextInput,
-  Button,
-  Pressable,
-  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useState } from "react";
+import AddContactModal from "./Layouts/AddContactModal";
 
 const logo = require("./../assets/images/splash-img.png");
 const contactLogo = require("./../assets/images/contact-icon.png");
@@ -27,6 +20,9 @@ const contactLogo = require("./../assets/images/contact-icon.png");
 export default function HomeScreen() {
   const [db, setDb] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     const main = async () => {
@@ -63,15 +59,17 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
     if (!db) return;
 
     try {
-      const name = `John Doe ${Math.random().toFixed(2)}`;
-      const phone = "123-456-7890";
+      // const name = `John Doe ${Math.random().toFixed(2)}`;
+      // const phone = "123-456-7890";
       const result = await db.runAsync(
         "INSERT INTO contacts (name, phone) VALUES (?, ?)",
         name,
         phone
       );
       console.log(`Contacts added with ID: ${result.lastInsertRowId}`);
-      Alert.alert("ALERT", `Contact added with ID: ${result.lastInsertRowId}`);
+      setName("");
+      setPhone("");
+      setModalVisible(false);
       await fetchContacts(db);
     } catch (error) {
       console.log(`An error occurred while adding contacts: ${error}`);
@@ -91,24 +89,21 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
           <Text style={styles.headerText}>Contacts</Text>
         </View>
         {/* <Image source={logo} style={{ width: 60, height: 60 }} /> */}
-        <TouchableOpacity
+        <Link
           style={{
+            color: "white",
+            fontSize: 14,
+            fontWeight: "500",
             backgroundColor: "blue",
             paddingHorizontal: 20,
             borderRadius: 5,
             paddingVertical: 10,
           }}
-          activeOpacity={0.5}
-          onPress={() => addContact(db)}
+          href="/Login"
         >
-          <Link
-            style={{ color: "white", fontSize: 14, fontWeight: "500" }}
-            href="/Login"
-          >
-            Login
-          </Link>
-          {/* <Text style={{ color: "white" }}>Add</Text> */}
-        </TouchableOpacity>
+          Login
+        </Link>
+        {/* <Text style={{ color: "white" }}>Add</Text> */}
       </View>
       {/* children */}
       <View style={{ flex: 8 }}>
@@ -139,11 +134,23 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
         {/* Floating Button */}
         <TouchableOpacity
           style={styles.floatingButton}
-          onPress={() => addContact(db)}
+          onPress={() => setModalVisible(true)}
         >
           <Text style={styles.floatingButtonText}>+</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal */}
+      <AddContactModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        name={name}
+        setName={setName}
+        phone={phone}
+        setPhone={setPhone}
+        addContact={addContact}
+        db={db}
+      />
       {/* footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>Developed by Swift Tech</Text>
