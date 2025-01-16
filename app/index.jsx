@@ -18,7 +18,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Try } from "expo-router/build/views/Try";
 
 const logo = require("./../assets/images/splash-img.png");
 const contactLogo = require("./../assets/images/contact-icon.png");
@@ -57,6 +56,24 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
       console.log(`An Error ocurred while fetching contacts: ${error}`);
     }
   };
+
+  const addContact = async (db) => {
+    if (!db) return;
+
+    try {
+      const name = `John Doe ${Math.random().toFixed(2)}`;
+      const phone = "123-456-7890";
+      const result = await db.runAsync(
+        "INSERT INTO contacts (name, phone) VALUES (?, ?)",
+        name,
+        phone
+      );
+      console.log(`Contacts added with ID: ${result.lastInsertRowId}`);
+      await fetchContacts(db);
+    } catch (error) {
+      console.log(`An error occurred while adding contacts: ${error}`);
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -82,13 +99,15 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
                 paddingVertical: 10,
               }}
               activeOpacity={0.5}
+              onPress={() => addContact(db)}
             >
-              <Link
+              {/* <Link
                 style={{ color: "white", fontSize: 14, fontWeight: "500" }}
                 href="/Login"
               >
                 Login
-              </Link>
+              </Link> */}
+              <Text style={{ color: "white" }}>Add</Text>
             </TouchableOpacity>
           </View>
           {/* children */}
