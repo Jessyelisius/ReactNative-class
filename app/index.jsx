@@ -61,16 +61,20 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
     try {
       // const name = `John Doe ${Math.random().toFixed(2)}`;
       // const phone = "123-456-7890";
-      const result = await db.runAsync(
-        "INSERT INTO contacts (name, phone) VALUES (?, ?)",
-        name,
-        phone
-      );
-      console.log(`Contacts added with ID: ${result.lastInsertRowId}`);
-      setName("");
-      setPhone("");
-      setModalVisible(false);
-      await fetchContacts(db);
+      if (name === "" || phone === "") {
+        Alert.alert("ERROR", "Fields Cannot be empty");
+      } else {
+        const result = await db.runAsync(
+          "INSERT INTO contacts (name, phone) VALUES (?, ?)",
+          name,
+          phone
+        );
+        console.log(`Contacts added with ID: ${result.lastInsertRowId}`);
+        setName("");
+        setPhone("");
+        setModalVisible(false);
+        await fetchContacts(db);
+      }
     } catch (error) {
       console.log(`An error occurred while adding contacts: ${error}`);
     }
@@ -99,7 +103,7 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
             borderRadius: 5,
             paddingVertical: 10,
           }}
-          href="/Login"
+          href="/"
         >
           Login
         </Link>
