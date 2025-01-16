@@ -1,9 +1,11 @@
 import { Link } from "expo-router";
 import {
+  Alert,
   Image,
   Keyboard,
   Platform,
   ScrollView,
+  StatusBar,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -69,6 +71,7 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
         phone
       );
       console.log(`Contacts added with ID: ${result.lastInsertRowId}`);
+      Alert.alert("ALERT", `Contact added with ID: ${result.lastInsertRowId}`);
       await fetchContacts(db);
     } catch (error) {
       console.log(`An error occurred while adding contacts: ${error}`);
@@ -76,6 +79,7 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
   };
   return (
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 15 }}>
+      <StatusBar barStyle={"dark-content"} />
       {/* <Pressable
         style={{ flex: 1, paddingHorizontal: 15 }}
         onPress={() => Keyboard.dismiss()}
@@ -97,13 +101,13 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
           activeOpacity={0.5}
           onPress={() => addContact(db)}
         >
-          {/* <Link
-                style={{ color: "white", fontSize: 14, fontWeight: "500" }}
-                href="/Login"
-              >
-                Login
-              </Link> */}
-          <Text style={{ color: "white" }}>Add</Text>
+          <Link
+            style={{ color: "white", fontSize: 14, fontWeight: "500" }}
+            href="/Login"
+          >
+            Login
+          </Link>
+          {/* <Text style={{ color: "white" }}>Add</Text> */}
         </TouchableOpacity>
       </View>
       {/* children */}
@@ -111,17 +115,20 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
         <ScrollView>
           <View style={{ marginTop: 5 }}>
             {contacts.length > 0 ? (
-              contacts.map((contact) => (
-                <View style={styles.contact} key={contact.id}>
-                  <View>
-                    <Image source={contactLogo} style={styles.contactImage} />
+              contacts
+                .slice()
+                .reverse()
+                .map((contact) => (
+                  <View style={styles.contact} key={contact.id}>
+                    <View>
+                      <Image source={contactLogo} style={styles.contactImage} />
+                    </View>
+                    <View>
+                      <Text>{contact.name}</Text>
+                      <Text>{contact.phone}</Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text>{contact.name}</Text>
-                    <Text>{contact.phone}</Text>
-                  </View>
-                </View>
-              ))
+                ))
             ) : (
               <Text style={{ textAlign: "center", marginTop: 25 }}>
                 No Contacts Available
@@ -129,6 +136,13 @@ CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT 
             )}
           </View>
         </ScrollView>
+        {/* Floating Button */}
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => addContact(db)}
+        >
+          <Text style={styles.floatingButtonText}>+</Text>
+        </TouchableOpacity>
       </View>
       {/* footer */}
       <View style={styles.footer}>
@@ -162,4 +176,25 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   contactImage: { width: 35, height: 35, marginRight: 5 },
+  floatingButton: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 10,
+    right: 10,
+    elevation: 5, // For Android shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  floatingButtonText: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
 });
