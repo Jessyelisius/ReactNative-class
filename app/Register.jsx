@@ -45,7 +45,7 @@ const Register = () => {
 
         <View style={styles.linkView}>
           <Text>Already have an account?</Text>
-          <Link style={{ fontWeight: "500", color: "blue" }} href="/">
+          <Link style={{ fontWeight: "500", color: "blue" }} href="/login">
             Login
           </Link>
         </View>

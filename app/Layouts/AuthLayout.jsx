@@ -1,3 +1,4 @@
+import { StatusBar } from "expo-status-bar";
 import {
   Text,
   View,
@@ -16,6 +17,7 @@ const logo = require("./../../assets/images/splash-img.png");
 export default function AuthLayout({ children, screen }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -30,7 +32,7 @@ export default function AuthLayout({ children, screen }) {
           <View style={{ flex: 7 }}>{children}</View>
           {/* footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Developed by Swift Tech</Text>
+            <Text style={styles.footerText}>Developed by Solutech</Text>
           </View>
         </Pressable>
       </KeyboardAvoidingView>
