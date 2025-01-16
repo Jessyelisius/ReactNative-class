@@ -16,11 +16,47 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SQLite from "expo-sqlite";
+import { useEffect, useState } from "react";
+import { Try } from "expo-router/build/views/Try";
 
 const logo = require("./../assets/images/splash-img.png");
 const contactLogo = require("./../assets/images/contact-icon.png");
 
 export default function HomeScreen() {
+  const [db, setDb] = useState(null);
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    const main = async () => {
+      const database = await SQLite.openDatabaseAsync("contacts.db");
+      setDb(database);
+      await initializeDatabase(database);
+      await fetchContacts(database);
+    };
+    main();
+  }, []);
+
+  const initializeDatabase = async (database) => {
+    try {
+      await db.execAsync(`
+PRAGMA journal_mode = WAL;
+CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL);
+`);
+      console.log("Table initialized successfully");
+    } catch (error) {
+      console.log(`Error initializing database: ${erorr}`);
+    }
+  };
+
+  const fetchContacts = async (database) => {
+    try {
+      const rows = await database.getAllAsync("SELECT * FROM contacts");
+      setContacts(rows);
+    } catch (error) {
+      console.log(`An Error ocurred while fetching contacts: ${error}`);
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -47,33 +83,38 @@ export default function HomeScreen() {
               }}
               activeOpacity={0.5}
             >
-              <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
+              <Link
+                style={{ color: "white", fontSize: 14, fontWeight: "500" }}
+                href="/Login"
+              >
                 Login
-              </Text>
+              </Link>
             </TouchableOpacity>
           </View>
           {/* children */}
           <View style={{ flex: 8 }}>
             <ScrollView>
               <View style={{ marginTop: 5 }}>
-                <View style={styles.contact}>
-                  <View>
-                    <Image source={contactLogo} style={styles.contactImage} />
-                  </View>
-                  <View>
-                    <Text>Abraham</Text>
-                    <Text>09032825450</Text>
-                  </View>
-                </View>
-                <View style={styles.contact}>
-                  <View>
-                    <Image source={contactLogo} style={styles.contactImage} />
-                  </View>
-                  <View>
-                    <Text>Abraham</Text>
-                    <Text>09032825450</Text>
-                  </View>
-                </View>
+                {contacts.length > 0 ? (
+                  contacts.map((contact) => (
+                    <View style={styles.contact} key={contact.id}>
+                      <View>
+                        <Image
+                          source={contactLogo}
+                          style={styles.contactImage}
+                        />
+                      </View>
+                      <View>
+                        <Text>{contact.name}</Text>
+                        <Text>{contact.phone}</Text>
+                      </View>
+                    </View>
+                  ))
+                ) : (
+                  <Text style={{ textAlign: "center", marginTop: 25 }}>
+                    No Contacts Available
+                  </Text>
+                )}
               </View>
             </ScrollView>
           </View>
